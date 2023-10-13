@@ -36,6 +36,7 @@ Memory::Memory(Cartridge* pCartridge)
     InitPointer(m_pBios);
     InitPointer(m_pRam);
     m_bBiosLoaded = false;
+	m_iRamSize = 0x400;
 }
 
 Memory::~Memory()
@@ -54,7 +55,7 @@ Memory::~Memory()
 
     if (IsValidPointer(m_pDisassembledRamMap))
     {
-        for (int i = 0; i < 0x400; i++)
+        for (int i = 0; i < ms_iMaxRamSize; i++)
         {
             SafeDelete(m_pDisassembledRamMap[i]);
         }
@@ -87,7 +88,7 @@ void Memory::SetProcessor(Processor* pProcessor)
 
 void Memory::Init()
 {
-    m_pRam = new u8[0x0400];
+    m_pRam = new u8[ms_iMaxRamSize];
     m_pBios = new u8[0x2000];
 
 #ifndef GEARCOLECO_DISABLE_DISASSEMBLER
@@ -97,8 +98,8 @@ void Memory::Init()
         InitPointer(m_pDisassembledRomMap[i]);
     }
 
-    m_pDisassembledRamMap = new stDisassembleRecord*[0x400];
-    for (int i = 0; i < 0x400; i++)
+    m_pDisassembledRamMap = new stDisassembleRecord*[ms_iMaxRamSize];
+    for (int i = 0; i < ms_iMaxRamSize; i++)
     {
         InitPointer(m_pDisassembledRamMap[i]);
     }
@@ -126,25 +127,45 @@ void Memory::Init()
 
 void Memory::Reset()
 {
-    for (int i = 0; i < 0x400; i++)
+	Cartridge::CartridgeTypes cartType	= m_pCartridge->GetType();
+
+	if (cartType == Cartridge::CartridgePencil2)
+	{
+		m_iRamSize = 2 * 1024;
+	}
+
+	else
+	{
+		m_iRamSize = 1 * 1024;
+	}
+
+	for (int i = 0; i < m_iRamSize; i++)
     {
         m_pRam[i] = rand() % 256;
     }
 
-    if (m_pCartridge->IsPAL())
-        m_pBios[0x69] = 0x32;
-    else
-        m_pBios[0x69] = 0x3C;
+	if (cartType == Cartridge::CartridgeColecoVision)
+	{
+		if (m_pCartridge->IsPAL())
+			m_pBios[0x69] = 0x32;
+		else
+			m_pBios[0x69] = 0x3C;
+	}
+
+	else
+	{
+		m_pBios[0x69] = m_uPatchedByte;
+	}
 }
 
 void Memory::SaveState(std::ostream& stream)
 {
-    stream.write(reinterpret_cast<const char*> (m_pRam), 0x400);
+    stream.write(reinterpret_cast<const char*> (m_pRam), ms_iMaxRamSize);
 }
 
 void Memory::LoadState(std::istream& stream)
 {
-    stream.read(reinterpret_cast<char*> (m_pRam), 0x400);
+    stream.read(reinterpret_cast<char*> (m_pRam), ms_iMaxRamSize);
 }
 
 std::vector<Memory::stDisassembleRecord*>* Memory::GetBreakpointsCPU()
@@ -189,7 +210,9 @@ void Memory::LoadBios(const char* szFilePath)
         file.read(reinterpret_cast<char*>(m_pBios), size);
         file.close();
 
-        m_bBiosLoaded = true;
+		m_uPatchedByte = m_pBios[0x69];
+
+		m_bBiosLoaded = true;
 
         Log("BIOS %s loaded (%d bytes)", szFilePath, size);
     }
@@ -267,7 +290,7 @@ void Memory::ResetRomDisassembledMemory()
 
     if (IsValidPointer(m_pDisassembledRamMap))
     {
-        for (int i = 0; i < 0x400; i++)
+        for (int i = 0; i < ms_iMaxRamSize; i++)
         {
             SafeDelete(m_pDisassembledRamMap[i]);
         }
@@ -319,7 +342,7 @@ Memory::stDisassembleRecord* Memory::GetDisassembleRecord(u16 address, bool crea
         }
         case 0x6000:
         {
-            offset = address & 0x03FF;
+            offset = address & (m_iRamSize - 1);
             map = m_pDisassembledRamMap;
             segment = 2;
             break;

@@ -29,7 +29,8 @@ public:
     enum CartridgeTypes
     {
         CartridgeColecoVision,
-        CartridgeNotSupported
+		CartridgePencil2,
+		CartridgeNotSupported
     };
 
     enum CartridgeRegions

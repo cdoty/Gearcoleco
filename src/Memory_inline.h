@@ -42,7 +42,7 @@ inline u8 Memory::Read(u16 address)
         }
         case 0x6000:
         {
-            return m_pRam[address & 0x03FF];
+            return m_pRam[address & (m_iRamSize - 1)];
         }
         case 0x8000:
         case 0xA000:
@@ -86,7 +86,7 @@ inline void Memory::Write(u16 address, u8 value)
         }
         case 0x6000:
         {
-            m_pRam[address & 0x03FF] = value;
+            m_pRam[address & (m_iRamSize - 1)] = value;
             break;
         }
         case 0x8000:

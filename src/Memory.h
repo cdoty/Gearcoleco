@@ -80,7 +80,9 @@ private:
     void CheckBreakpoints(u16 address, bool write);
 
 private:
-    Processor* m_pProcessor;
+	size_t	ms_iMaxRamSize	= 2 * 1024;	// Allow for pencil bios
+	
+	Processor* m_pProcessor;
     Cartridge* m_pCartridge;
     stDisassembleRecord** m_pDisassembledRomMap;
     stDisassembleRecord** m_pDisassembledRamMap;
@@ -92,6 +94,9 @@ private:
     bool m_bBiosLoaded;
     u8* m_pBios;
     u8* m_pRam;
+	u8	m_uPatchedByte;
+
+	size_t	m_iRamSize;
 };
 
 #include "Memory_inline.h"

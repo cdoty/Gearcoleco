@@ -89,29 +89,32 @@ Cartridge::CartridgeTypes Cartridge::GetType() const
 
 void Cartridge::ForceConfig(Cartridge::ForceConfiguration config)
 {
-    m_iCRC = CalculateCRC32(0, m_pROM, m_iROMSize);
-    GatherMetadata(m_iCRC);
+	if (m_Type != CartridgePencil2)
+	{
+		m_iCRC = CalculateCRC32(0, m_pROM, m_iROMSize);
+		GatherMetadata(m_iCRC);
 
-    if (config.region == CartridgePAL)
-    {
-        Log("Forcing Region: PAL");
-        m_bPAL = true;
-    }
-    else if (config.region == CartridgeNTSC)
-    {
-        Log("Forcing Region: NTSC");
-        m_bPAL = false;
-    }
+		if (config.region == CartridgePAL)
+		{
+			Log("Forcing Region: PAL");
+			m_bPAL = true;
+		}
+		else if (config.region == CartridgeNTSC)
+		{
+			Log("Forcing Region: NTSC");
+			m_bPAL = false;
+		}
 
-    switch (config.type)
-    {
-        case Cartridge::CartridgeColecoVision:
-            m_Type = config.type;
-            Log("Forcing Mapper: Colecovision");
-            break;
-        default:
-            break;
-    }
+		switch (config.type)
+		{
+			case Cartridge::CartridgeColecoVision:
+				m_Type = config.type;
+				Log("Forcing Mapper: Colecovision");
+				break;
+			default:
+				break;
+		}
+	}
 }
 
 int Cartridge::GetROMSize() const
@@ -322,7 +325,28 @@ bool Cartridge::GatherMetadata(u32 crc)
     }
 
     u16 header = m_pROM[headerOffset + 1] | (m_pROM[headerOffset + 0] << 8);
-    m_bValidROM = (header == 0xAA55) || (header == 0x55AA);
+	
+	switch (header)
+	{
+		case 0x55AA:
+		case 0xAA55:
+			m_bValidROM = true;
+
+			m_Type = Cartridge::CartridgeColecoVision;
+
+			break;
+
+		case 0x434F:
+			m_bValidROM = true;
+			m_bPAL		= true;
+
+			m_Type = Cartridge::CartridgePencil2;
+
+			break;
+
+		default:
+			m_Type = Cartridge::CartridgeNotSupported;
+	}
 
     if (m_bValidROM)
     {
@@ -338,8 +362,6 @@ bool Cartridge::GatherMetadata(u32 crc)
         Log("Cartridge is a Colec Adam expansion ROM. Header: %X", header);
     }
 
-    m_Type = m_bValidROM ? Cartridge::CartridgeColecoVision : Cartridge::CartridgeNotSupported;
-
     GetInfoFromDB(crc);
 
     switch (m_Type)
@@ -347,7 +369,10 @@ bool Cartridge::GatherMetadata(u32 crc)
         case Cartridge::CartridgeColecoVision:
             Log("ColecoVision mapper found");
             break;
-        case Cartridge::CartridgeNotSupported:
+		case Cartridge::CartridgePencil2:
+			Log("Pencil 2 mapper found");
+			break;
+		case Cartridge::CartridgeNotSupported:
             Log("Cartridge not supported!!");
             break;
         default:
