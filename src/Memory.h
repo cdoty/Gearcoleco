@@ -80,7 +80,7 @@ private:
     void CheckBreakpoints(u16 address, bool write);
 
 private:
-	size_t	ms_iMaxRamSize	= 2 * 1024;	// Allow for pencil bios
+	size_t	ms_iMaxRamSize	= 0x10000;	// Allow for pecos ram
 	
 	Processor* m_pProcessor;
     Cartridge* m_pCartridge;

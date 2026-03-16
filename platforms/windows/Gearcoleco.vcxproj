@@ -24,6 +24,7 @@
     <ClCompile Include="..\..\src\opcodes.cpp" />
     <ClCompile Include="..\..\src\opcodes_cb.cpp" />
     <ClCompile Include="..\..\src\opcodes_ed.cpp" />
+    <ClCompile Include="..\..\src\PecosIOPorts.cpp" />
     <ClCompile Include="..\..\src\Processor.cpp" />
     <ClCompile Include="..\..\src\Video.cpp" />
     <ClCompile Include="..\audio-shared\Sound_Queue.cpp" />
@@ -73,6 +74,7 @@
     <ClInclude Include="..\..\src\opcode_daa.h" />
     <ClInclude Include="..\..\src\opcode_names.h" />
     <ClInclude Include="..\..\src\opcode_timing.h" />
+    <ClInclude Include="..\..\src\PecosIOPorts.h" />
     <ClInclude Include="..\..\src\Processor.h" />
     <ClInclude Include="..\..\src\Processor_inline.h" />
     <ClInclude Include="..\..\src\SixteenBitRegister.h" />
@@ -105,12 +107,12 @@
     <ProjectGuid>{B12702AD-ABFB-343A-A199-8E24837244A3}</ProjectGuid>
     <RootNamespace>Gearcoleco</RootNamespace>
     <Keyword>Qt4VSv1.0</Keyword>
-    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.22000.0</WindowsTargetPlatformVersion>
     <ProjectName>Gearcoleco</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <PlatformToolSet>v142</PlatformToolSet>
+    <PlatformToolSet>v141</PlatformToolSet>
     <OutputDirectory>release\</OutputDirectory>
     <ATLMinimizesCRunTimeLibraryUsage>false</ATLMinimizesCRunTimeLibraryUsage>
     <CharacterSet>NotSet</CharacterSet>
@@ -119,7 +121,7 @@
     <PrimaryOutput>Gearcoleco</PrimaryOutput>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <PlatformToolSet>v142</PlatformToolSet>
+    <PlatformToolSet>v141</PlatformToolSet>
     <OutputDirectory>debug\</OutputDirectory>
     <ATLMinimizesCRunTimeLibraryUsage>false</ATLMinimizesCRunTimeLibraryUsage>
     <CharacterSet>NotSet</CharacterSet>

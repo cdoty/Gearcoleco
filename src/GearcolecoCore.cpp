@@ -26,6 +26,7 @@
 #include "Input.h"
 #include "Cartridge.h"
 #include "ColecoVisionIOPorts.h"
+#include "PecosIOPorts.h"
 #include "no_bios.h"
 
 GearcolecoCore::GearcolecoCore()
@@ -37,6 +38,7 @@ GearcolecoCore::GearcolecoCore()
     InitPointer(m_pInput);
     InitPointer(m_pCartridge);
     InitPointer(m_pColecoVisionIOPorts);
+    InitPointer(m_pPecosIOPorts);
     m_bPaused = true;
     m_pixelFormat = GC_PIXEL_RGB888;
 }
@@ -44,6 +46,7 @@ GearcolecoCore::GearcolecoCore()
 GearcolecoCore::~GearcolecoCore()
 {
     SafeDelete(m_pColecoVisionIOPorts);
+    SafeDelete(m_pPecosIOPorts);
     SafeDelete(m_pCartridge);
     SafeDelete(m_pInput);
     SafeDelete(m_pVideo);
@@ -65,6 +68,7 @@ void GearcolecoCore::Init(GC_Color_Format pixelFormat)
     m_pVideo = new Video(m_pMemory, m_pProcessor);
     m_pInput = new Input();
     m_pColecoVisionIOPorts = new ColecoVisionIOPorts(m_pAudio, m_pVideo, m_pInput, m_pCartridge, m_pMemory, m_pProcessor);
+    m_pPecosIOPorts = new PecosIOPorts(m_pAudio, m_pVideo, m_pInput, m_pCartridge, m_pMemory, m_pProcessor);
 
     m_pMemory->Init();
     m_pProcessor->Init();
@@ -72,8 +76,6 @@ void GearcolecoCore::Init(GC_Color_Format pixelFormat)
     m_pVideo->Init();
     m_pInput->Init();
     m_pCartridge->Init();
-
-    m_pProcessor->SetIOPOrts(m_pColecoVisionIOPorts);
 }
 
 bool GearcolecoCore::RunToVBlank(u8* pFrameBuffer, s16* pSampleBuffer, int* pSampleCount, bool step, bool stopOnBreakpoints)
@@ -121,7 +123,17 @@ bool GearcolecoCore::LoadROM(const char* szFilePath, Cartridge::ForceConfigurati
 {
     if (m_pCartridge->LoadFromFile(szFilePath))
     {
-        if (IsValidPointer(config))
+	    if (Cartridge::CartridgePecos == m_pCartridge->GetType())
+		{
+			m_pProcessor->SetIOPOrts(m_pPecosIOPorts);
+		}
+
+		else
+		{
+			m_pProcessor->SetIOPOrts(m_pColecoVisionIOPorts);
+		}
+    
+		if (IsValidPointer(config))
             m_pCartridge->ForceConfig(*config);
 
         Reset();
@@ -583,7 +595,17 @@ void GearcolecoCore::Reset()
     m_pAudio->Reset(m_pCartridge->IsPAL());
     m_pVideo->Reset(m_pCartridge->IsPAL());
     m_pInput->Reset();
-    m_pColecoVisionIOPorts->Reset();
+    
+	if (Cartridge::CartridgePecos == m_pCartridge->GetType())
+	{
+		m_pPecosIOPorts->Reset();
+	}
+
+	else
+	{
+		m_pColecoVisionIOPorts->Reset();
+	}
+
     m_bPaused = false;
 }
 

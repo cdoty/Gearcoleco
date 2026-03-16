@@ -36,7 +36,16 @@ Memory::Memory(Cartridge* pCartridge)
     InitPointer(m_pBios);
     InitPointer(m_pRam);
     m_bBiosLoaded = false;
-	m_iRamSize = 0x400;
+	
+	if (Cartridge::CartridgePecos == m_pCartridge->GetType())
+	{
+		m_iRamSize = 0x10000;
+	}
+
+	else
+	{
+		m_iRamSize = 0x400;
+	}
 }
 
 Memory::~Memory()
@@ -88,8 +97,8 @@ void Memory::SetProcessor(Processor* pProcessor)
 
 void Memory::Init()
 {
-    m_pRam = new u8[ms_iMaxRamSize];
-    m_pBios = new u8[0x2000];
+	m_pBios = new u8[0x2000];
+	m_pRam = new u8[ms_iMaxRamSize];
 
 #ifndef GEARCOLECO_DISABLE_DISASSEMBLER
     m_pDisassembledRomMap = new stDisassembleRecord*[MAX_ROM_SIZE];
@@ -134,6 +143,11 @@ void Memory::Reset()
 		m_iRamSize = 2 * 1024;
 	}
 
+	else if (cartType == Cartridge::CartridgePecos)
+	{
+		m_iRamSize = 64 * 1024;
+	}
+
 	else
 	{
 		m_iRamSize = 1 * 1024;
@@ -154,7 +168,7 @@ void Memory::Reset()
 
 	else
 	{
-		m_pBios[0x69] = m_uPatchedByte;
+//		m_pBios[0x69] = m_uPatchedByte;
 	}
 }
 
@@ -200,11 +214,11 @@ void Memory::LoadBios(const char* szFilePath)
     {
         int size = static_cast<int> (file.tellg());
 
-        if (size != 0x2000)
-        {
-            Log("Incorrect BIOS size %d: %s", size, szFilePath);
-            return;
-        }
+		if (size != 0x1000 && size != 0x2000)
+		{
+			Log("Incorrect BIOS size %d: %s", size, szFilePath);
+			return;
+		}
 
         file.seekg(0, ios::beg);
         file.read(reinterpret_cast<char*>(m_pBios), size);

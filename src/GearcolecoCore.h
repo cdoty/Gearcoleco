@@ -29,6 +29,7 @@ class Audio;
 class Video;
 class Input;
 class ColecoVisionIOPorts;
+class PecosIOPorts;
 
 class GearcolecoCore
 {
@@ -81,6 +82,7 @@ private:
     Input* m_pInput;
     Cartridge* m_pCartridge;
     ColecoVisionIOPorts* m_pColecoVisionIOPorts;
+    PecosIOPorts* m_pPecosIOPorts;
     bool m_bPaused;
     GC_Color_Format m_pixelFormat;
 };

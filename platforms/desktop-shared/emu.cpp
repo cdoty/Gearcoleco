@@ -327,7 +327,7 @@ static void save_ram(void)
 
 static void load_ram(void)
 {
-    if ((emu_savefiles_dir_option == 0) && (strcmp(emu_savefiles_path, "")))
+	if ((emu_savefiles_dir_option == 0) && (strcmp(emu_savefiles_path, "")))
         gearcoleco->LoadRam(emu_savefiles_path);
     else
         gearcoleco->LoadRam();

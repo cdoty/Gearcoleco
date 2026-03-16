@@ -28,41 +28,60 @@ inline u8 Memory::Read(u16 address)
     CheckBreakpoints(address, false);
     #endif
 
-    switch (address & 0xE000)
-    {
-        case 0x0000:
-        {
-            return m_pBios[address];
-        }
-        case 0x2000:
-        case 0x4000:
-        {
-            Log("--> ** Attempting to read from expansion: %X", address);
-            return 0xFF;
-        }
-        case 0x6000:
-        {
-            return m_pRam[address & (m_iRamSize - 1)];
-        }
-        case 0x8000:
-        case 0xA000:
-        case 0xC000:
-        case 0xE000:
-        {
-            u8* pRom = m_pCartridge->GetROM();
-            int romSize = m_pCartridge->GetROMSize();
+    if (Cartridge::CartridgePecos == m_pCartridge->GetType())
+	{
+		switch (address & 0xF000)
+		{
+			case 0x0000:
+			{
+				return m_pBios[address];
+			}
 
-            if (address >= (romSize + 0x8000))
-            {
-                Log("--> ** Attempting to read from outer ROM: %X. ROM Size: %X", address, romSize);
-                return 0xFF;
-            }
+			default:
+			{
+				return	m_pRam[address];
+			}
+		}
+	}
 
-            return pRom[address & 0x7FFF];
-        }
-        default:
-            return 0xFF;
-    }
+	else
+	{
+		switch (address & 0xE000)
+		{
+			case 0x0000:
+			{
+				return m_pBios[address];
+			}
+			case 0x2000:
+			case 0x4000:
+			{
+				Log("--> ** Attempting to read from expansion: %X", address);
+				return 0xFF;
+			}
+			case 0x6000:
+			{
+				return m_pRam[address & (m_iRamSize - 1)];
+			}
+			case 0x8000:
+			case 0xA000:
+			case 0xC000:
+			case 0xE000:
+			{
+				u8* pRom = m_pCartridge->GetROM();
+				int romSize = m_pCartridge->GetROMSize();
+
+				if (address >= (romSize + 0x8000))
+				{
+					Log("--> ** Attempting to read from outer ROM: %X. ROM Size: %X", address, romSize);
+					return 0xFF;
+				}
+
+				return pRom[address & 0x7FFF];
+			}
+			default:
+				return 0xFF;
+		}
+	}
 }
 
 inline void Memory::Write(u16 address, u8 value)
@@ -71,33 +90,41 @@ inline void Memory::Write(u16 address, u8 value)
     CheckBreakpoints(address, true);
     #endif
 
-    switch (address & 0xE000)
-    {
-        case 0x0000:
-        {
-            Log("--> ** Attempting to write on BIOS: %X %X", address, value);
-            break;
-        }
-        case 0x2000:
-        case 0x4000:
-        {
-            Log("--> ** Attempting to write on expansion: %X %X", address, value);
-            break;
-        }
-        case 0x6000:
-        {
-            m_pRam[address & (m_iRamSize - 1)] = value;
-            break;
-        }
-        case 0x8000:
-        case 0xA000:
-        case 0xC000:
-        case 0xE000:
-        {
-            Log("--> ** Attempting to write on ROM: %X %X", address, value);
-            break;
-        }
-    }
+    if (Cartridge::CartridgePecos == m_pCartridge->GetType())
+	{
+		m_pRam[address] = value;
+	}
+
+	else
+	{
+		switch (address & 0xE000)
+		{
+			case 0x0000:
+			{
+				Log("--> ** Attempting to write on BIOS: %X %X", address, value);
+				break;
+			}
+			case 0x2000:
+			case 0x4000:
+			{
+				Log("--> ** Attempting to write on expansion: %X %X", address, value);
+				break;
+			}
+			case 0x6000:
+			{
+				m_pRam[address & (m_iRamSize - 1)] = value;
+				break;
+			}
+			case 0x8000:
+			case 0xA000:
+			case 0xC000:
+			case 0xE000:
+			{
+				Log("--> ** Attempting to write on ROM: %X %X", address, value);
+				break;
+			}
+		}
+	}
 }
 
 inline Memory::stDisassembleRecord** Memory::GetDisassembledRomMemoryMap()

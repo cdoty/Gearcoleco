@@ -1,0 +1,385 @@
+BIOS $0000   21 19 00      LD HL,$0019
+BIOS $0003   11 00 F4      LD DE,$F400
+BIOS $0006   01 23 08      LD BC,$0823
+BIOS $0009   ED B0         LDIR
+BIOS $000B   21 3C 08      LD HL,$083C
+BIOS $000E   11 00 D0      LD DE,$D000
+BIOS $0011   01 08 04      LD BC,$0408
+BIOS $0014   ED B0         LDIR
+BIOS $0016   C3 00 D0      JP $D000
+ROM  $D000   3E FF         LD A,$FF
+ROM  $D002   D3 40         OUT ($40),A
+ROM  $D004   31 23 FC      LD SP,$FC23
+ROM  $D007   21 C8 FB      LD HL,$FBC8
+ROM  $D00A   CB D6         SET 2 (HL)
+ROM  $D00C   CD 8A F5      CALL $F58A
+ROM  $D00F   3E 01         LD A,$01
+ROM  $D011   32 03 00      LD ($0003),A
+ROM  $D014   0E 71         LD C,$71
+ROM  $D016   21 F8 D3      LD HL,$D3F8
+ROM  $D019   06 10         LD B,$10
+ROM  $D01B   7E            LD A,(HL)
+ROM  $D01C   ED 79         OUT (C),A
+ROM  $D01E   E3            EX (SP),HL
+ROM  $D01F   E3            EX (SP),HL
+ROM  $D020   23            INC HL
+ROM  $D021   05            DEC B
+ROM  $D022   20 F7         JR NZ,$D01B  [-9]
+ROM  $D024   3E 00         LD A,$00
+ROM  $D026   0E 71         LD C,$71
+ROM  $D028   ED 79         OUT (C),A
+ROM  $D02A   E3            EX (SP),HL
+ROM  $D02B   E3            EX (SP),HL
+ROM  $D02C   3E 40         LD A,$40
+ROM  $D02E   ED 79         OUT (C),A
+ROM  $D030   0D            DEC C
+ROM  $D031   11 00 40      LD DE,$4000
+ROM  $D034   3E 00         LD A,$00
+ROM  $D036   E3            EX (SP),HL
+ROM  $D037   E3            EX (SP),HL
+ROM  $D038   ED 79         OUT (C),A
+ROM  $D03A   1B            DEC DE
+ROM  $D03B   7A            LD A,D
+ROM  $D03C   B3            OR E
+ROM  $D03D   20 F5         JR NZ,$D034  [-11]
+ROM  $D03F   3E 00         LD A,$00
+ROM  $D041   0E 71         LD C,$71
+ROM  $D043   ED 79         OUT (C),A
+ROM  $D045   E3            EX (SP),HL
+ROM  $D046   E3            EX (SP),HL
+ROM  $D047   3E 60         LD A,$60
+ROM  $D049   ED 79         OUT (C),A
+ROM  $D04B   0D            DEC C
+ROM  $D04C   E3            EX (SP),HL
+ROM  $D04D   E3            EX (SP),HL
+ROM  $D04E   11 00 18      LD DE,$1800
+ROM  $D051   3E F1         LD A,$F1
+ROM  $D053   ED 79         OUT (C),A
+ROM  $D055   1B            DEC DE
+ROM  $D056   E3            EX (SP),HL
+ROM  $D057   E3            EX (SP),HL
+ROM  $D058   7A            LD A,D
+ROM  $D059   B3            OR E
+ROM  $D05A   20 F5         JR NZ,$D051  [-11]
+ROM  $D05C   3E 00         LD A,$00
+ROM  $D05E   0E 71         LD C,$71
+ROM  $D060   ED 79         OUT (C),A
+ROM  $D062   3E 78         LD A,$78
+ROM  $D064   E3            EX (SP),HL
+ROM  $D065   E3            EX (SP),HL
+ROM  $D066   ED 79         OUT (C),A
+ROM  $D068   0D            DEC C
+ROM  $D069   16 03         LD D,$03
+ROM  $D06B   06 00         LD B,$00
+ROM  $D06D   1E 00         LD E,$00
+ROM  $D06F   ED 41         OUT (C),B
+ROM  $D071   00            NOP
+ROM  $D072   04            INC B
+ROM  $D073   E3            EX (SP),HL
+ROM  $D074   E3            EX (SP),HL
+ROM  $D075   1D            DEC E
+ROM  $D076   20 F7         JR NZ,$D06F  [-9]
+ROM  $D078   15            DEC D
+ROM  $D079   20 F2         JR NZ,$D06D  [-14]
+ROM  $D07B   21 97 D2      LD HL,$D297
+ROM  $D07E   31 A3 D2      LD SP,$D2A3
+ROM  $D081   16 02         LD D,$02
+ROM  $D083   C1            POP BC
+ROM  $D084   ED B3         OTIR
+ROM  $D086   15            DEC D
+ROM  $D087   20 FA         JR NZ,$D083  [-6]
+ROM  $D089   31 23 FC      LD SP,$FC23
+ROM  $D08C   3E FF         LD A,$FF
+ROM  $D08E   D3 30         OUT ($30),A
+ROM  $D090   DB 50         IN A,($50)
+ROM  $D092   E6 80         AND $80
+ROM  $D094   5F            LD E,A
+ROM  $D095   A3            AND E
+ROM  $D096   CA 92 D1      JP Z,$D192
+ROM  $D099   3E 00         LD A,$00
+ROM  $D09B   D3 30         OUT ($30),A
+ROM  $D09D   DB 50         IN A,($50)
+ROM  $D09F   E6 80         AND $80
+ROM  $D0A1   AB            XOR E
+ROM  $D0A2   CA 92 D1      JP Z,$D192
+ROM  $D192   01 00 00      LD BC,$0000
+ROM  $D195   CD CC F7      CALL $F7CC
+ROM  $D198   21 A7 D2      LD HL,$D2A7
+ROM  $D19B   7E            LD A,(HL)
+ROM  $D19C   FE 24         CP $24
+ROM  $D19E   28 09         JR Z,$D1A9  [+9]
+ROM  $D1A0   E5            PUSH HL
+ROM  $D1A1   4E            LD C,(HL)
+ROM  $D1A2   CD D9 F6      CALL $F6D9
+ROM  $D1A5   E1            POP HL
+ROM  $D1A6   23            INC HL
+ROM  $D1A7   18 F2         JR $D19B  [-14]
+ROM  $D1A9   CD 75 F6      CALL $F675
+ROM  $D1AC   FE 31         CP $31
+ROM  $D1AE   CA BD D1      JP Z,$D1BD
+ROM  $D1B1   FE 32         CP $32
+ROM  $D1B3   CA C2 D1      JP Z,$D1C2
+ROM  $D1B6   FE 33         CP $33
+ROM  $D1B8   CA C7 D1      JP Z,$D1C7
+ROM  $D1BB   18 EC         JR $D1A9  [-20]
+ROM  $F433   CD 5D F4      CALL $F45D
+ROM  $F436   ED 61         OUT (C),H
+ROM  $F438   0D            DEC C
+ROM  $F439   E3            EX (SP),HL
+ROM  $F43A   E3            EX (SP),HL
+ROM  $F43B   ED 78         IN A,(C)
+ROM  $F43D   E3            EX (SP),HL
+ROM  $F43E   E3            EX (SP),HL
+ROM  $F43F   C9            RET
+ROM  $F447   CD 5D F4      CALL $F45D
+ROM  $F44A   CB F4         SET 6 H
+ROM  $F44C   ED 61         OUT (C),H
+ROM  $F44E   0D            DEC C
+ROM  $F44F   E3            EX (SP),HL
+ROM  $F450   E3            EX (SP),HL
+ROM  $F451   ED 79         OUT (C),A
+ROM  $F453   E3            EX (SP),HL
+ROM  $F454   E3            EX (SP),HL
+ROM  $F455   C9            RET
+ROM  $F456   0E 70         LD C,$70
+ROM  $F458   ED 79         OUT (C),A
+ROM  $F45A   E3            EX (SP),HL
+ROM  $F45B   E3            EX (SP),HL
+ROM  $F45C   C9            RET
+ROM  $F45D   0E 71         LD C,$71
+ROM  $F45F   ED 69         OUT (C),L
+ROM  $F461   E3            EX (SP),HL
+ROM  $F462   E3            EX (SP),HL
+ROM  $F463   C9            RET
+ROM  $F58A   7E            LD A,(HL)
+ROM  $F58B   0E 20         LD C,$20
+ROM  $F58D   ED 79         OUT (C),A
+ROM  $F58F   C9            RET
+ROM  $F5AC   3A C5 FB      LD A,($FBC5)
+ROM  $F5AF   B7            OR A
+ROM  $F5B0   C0            RET NZ
+ROM  $F5B1   3E FF         LD A,$FF
+ROM  $F5B3   32 C6 FB      LD ($FBC6),A
+ROM  $F5B6   11 BA FB      LD DE,$FBBA
+ROM  $F5B9   0E 10         LD C,$10
+ROM  $F5BB   06 07         LD B,$07
+ROM  $F5BD   0E 10         LD C,$10
+ROM  $F5BF   ED 48         IN C,(C)
+ROM  $F5C1   ED 43 B8 FB   LD ($FBB8),BC
+ROM  $F5C5   CD 38 F6      CALL $F638
+ROM  $F5C8   CD 5B F6      CALL $F65B
+ROM  $F5CB   CD D5 F5      CALL $F5D5
+ROM  $F5CE   13            INC DE
+ROM  $F5CF   05            DEC B
+ROM  $F5D0   FA 23 F6      JP M,$F623
+ROM  $F5D3   18 E8         JR $F5BD  [-24]
+ROM  $F5D5   1A            LD A,(DE)
+ROM  $F5D6   B9            CP C
+ROM  $F5D7   28 0C         JR Z,$F5E5  [+12]
+ROM  $F5D9   3E 2F         LD A,$2F
+ROM  $F5DB   32 1B F6      LD ($F61B),A
+ROM  $F5DE   3E 10         LD A,$10
+ROM  $F5E0   32 2B F6      LD ($F62B),A
+ROM  $F5E3   18 1A         JR $F5FF  [+26]
+ROM  $F5E5   3E FF         LD A,$FF
+ROM  $F5E7   B9            CP C
+ROM  $F5E8   28 48         JR Z,$F632  [+72]
+ROM  $F5EA   21 2A F6      LD HL,$F62A
+ROM  $F5ED   35            DEC (HL)
+ROM  $F5EE   20 33         JR NZ,$F623  [+51]
+ROM  $F5F0   3E 80         LD A,$80
+ROM  $F5F2   77            LD (HL),A
+ROM  $F5F3   23            INC HL
+ROM  $F5F4   35            DEC (HL)
+ROM  $F5F5   20 2C         JR NZ,$F623  [+44]
+ROM  $F5FF   CD 2D F6      CALL $F62D
+ROM  $F602   E1            POP HL
+ROM  $F603   20 B8         JR NZ,$F5BD  [-72]
+ROM  $F605   E5            PUSH HL
+ROM  $F606   3E 80         LD A,$80
+ROM  $F608   32 C7 FB      LD ($FBC7),A
+ROM  $F60B   1A            LD A,(DE)
+ROM  $F60C   B9            CP C
+ROM  $F60D   38 11         JR C,$F620  [+17]
+ROM  $F60F   3E FF         LD A,$FF
+ROM  $F611   32 C5 FB      LD ($FBC5),A
+ROM  $F614   D3 60         OUT ($60),A
+ROM  $F616   ED 43 C3 FB   LD ($FBC3),BC
+ROM  $F61A   1A            LD A,(DE)
+ROM  $F61B   2F            CPL
+ROM  $F61C   B1            OR C
+ROM  $F61D   32 C3 FB      LD ($FBC3),A
+ROM  $F620   79            LD A,C
+ROM  $F621   12            LD (DE),A
+ROM  $F622   C9            RET
+ROM  $F623   3A C5 FB      LD A,($FBC5)
+ROM  $F626   B7            OR A
+ROM  $F627   C9            RET
+ROM  $F62D   21 C7 FB      LD HL,$FBC7
+ROM  $F630   35            DEC (HL)
+ROM  $F631   C9            RET
+ROM  $F638   79            LD A,C
+ROM  $F639   CB 4F         BIT 1 A
+ROM  $F63B   C0            RET NZ
+ROM  $F63C   21 C6 FB      LD HL,$FBC6
+ROM  $F63F   78            LD A,B
+ROM  $F640   FE 03         CP $03
+ROM  $F642   28 0C         JR Z,$F650  [+12]
+ROM  $F644   FE 04         CP $04
+ROM  $F646   28 0D         JR Z,$F655  [+13]
+ROM  $F648   FE 01         CP $01
+ROM  $F64A   C0            RET NZ
+ROM  $F64B   CB 9E         RES 3 (HL)
+ROM  $F64D   CB C9         SET 1 C
+ROM  $F64F   C9            RET
+ROM  $F650   CB 96         RES 2 (HL)
+ROM  $F652   CB C9         SET 1 C
+ROM  $F654   C9            RET
+ROM  $F655   C9            RET
+ROM  $F65B   21 C6 FB      LD HL,$FBC6
+ROM  $F65E   3E F3         LD A,$F3
+ROM  $F660   BE            CP (HL)
+ROM  $F661   C0            RET NZ
+ROM  $F662   3A 2C F6      LD A,($F62C)
+ROM  $F665   00            NOP
+ROM  $F666   32 2C F6      LD ($F62C),A
+ROM  $F669   D3 60         OUT ($60),A
+ROM  $F66B   F1            POP AF
+ROM  $F66C   06 E0         LD B,$E0
+ROM  $F66E   0B            DEC BC
+ROM  $F66F   79            LD A,C
+ROM  $F670   B0            OR B
+ROM  $F671   20 FB         JR NZ,$F66E  [-5]
+ROM  $F673   18 AE         JR $F623  [-82]
+ROM  $F675   CD AC F5      CALL $F5AC
+ROM  $F678   28 FB         JR Z,$F675  [-5]
+ROM  $F67A   ED 4B C3 FB   LD BC,($FBC3)
+ROM  $F67E   AF            XOR A
+ROM  $F67F   32 C5 FB      LD ($FBC5),A
+ROM  $F682   79            LD A,C
+ROM  $F683   0E 08         LD C,$08
+ROM  $F685   0D            DEC C
+ROM  $F686   CB 27         SLA A
+ROM  $F688   38 FB         JR C,$F685  [-5]
+ROM  $F68A   79            LD A,C
+ROM  $F68B   CB 27         SLA A
+ROM  $F68D   CB 27         SLA A
+ROM  $F68F   CB 27         SLA A
+ROM  $F691   80            ADD A,B
+ROM  $F692   00            NOP
+ROM  $F693   06 00         LD B,$00
+ROM  $F695   4F            LD C,A
+ROM  $F696   21 73 FB      LD HL,$FB73
+ROM  $F699   09            ADD HL,BC
+ROM  $F69A   3A C6 FB      LD A,($FBC6)
+ROM  $F69D   47            LD B,A
+ROM  $F69E   3A 2C F6      LD A,($F62C)
+ROM  $F6A1   4F            LD C,A
+ROM  $F6A2   7E            LD A,(HL)
+ROM  $F6A3   CB 58         BIT 3 B
+ROM  $F6A5   20 05         JR NZ,$F6AC  [+5]
+ROM  $F6A7   CB AF         RES 5 A
+ROM  $F6A9   CB B7         RES 6 A
+ROM  $F6AB   C9            RET
+ROM  $F6D9   79            LD A,C
+ROM  $F6DA   FE 20         CP $20
+ROM  $F6DC   30 07         JR NC,$F6E5  [+7]
+ROM  $F6DE   21 D2 FB      LD HL,$FBD2
+ROM  $F6E1   06 09         LD B,$09
+ROM  $F6E3   18 0E         JR $F6F3  [+14]
+ROM  $F6E5   2A F9 FB      LD HL,($FBF9)
+ROM  $F6E8   E9            JP (HL)
+ROM  $F6F0   C3 41 F7      JP $F741
+ROM  $F6F3   BE            CP (HL)
+ROM  $F6F4   28 0C         JR Z,$F702  [+12]
+ROM  $F6F6   23            INC HL
+ROM  $F6F7   23            INC HL
+ROM  $F6F8   23            INC HL
+ROM  $F6F9   10 F8         DJNZ $F6F3  [-8]
+ROM  $F702   23            INC HL
+ROM  $F703   5E            LD E,(HL)
+ROM  $F704   23            INC HL
+ROM  $F705   56            LD D,(HL)
+ROM  $F706   EB            EX DE,HL
+ROM  $F707   E9            JP (HL)
+ROM  $F741   ED 4B B3 FB   LD BC,($FBB3)
+ROM  $F745   CD 35 F9      CALL $F935
+ROM  $F748   EB            EX DE,HL
+ROM  $F749   FE 60         CP $60
+ROM  $F74B   38 02         JR C,$F74F  [+2]
+ROM  $F74F   D6 20         SUB $20
+ROM  $F751   26 00         LD H,$00
+ROM  $F753   6F            LD L,A
+ROM  $F754   29            ADD HL,HL
+ROM  $F755   29            ADD HL,HL
+ROM  $F756   29            ADD HL,HL
+ROM  $F757   01 43 F9      LD BC,$F943
+ROM  $F75A   09            ADD HL,BC
+ROM  $F75B   EB            EX DE,HL
+ROM  $F75C   1A            LD A,(DE)
+ROM  $F75D   CD 8B F7      CALL $F78B
+ROM  $F760   CD 47 F4      CALL $F447
+ROM  $F763   06 07         LD B,$07
+ROM  $F765   13            INC DE
+ROM  $F766   1A            LD A,(DE)
+ROM  $F767   CD 8B F7      CALL $F78B
+ROM  $F76A   CD 56 F4      CALL $F456
+ROM  $F76D   05            DEC B
+ROM  $F76E   20 F5         JR NZ,$F765  [-11]
+ROM  $F770   21 B6 FB      LD HL,$FBB6
+ROM  $F773   CB C6         SET 0 (HL)
+ROM  $F775   18 05         JR $F77C  [+5]
+ROM  $F77C   ED 4B B3 FB   LD BC,($FBB3)
+ROM  $F780   79            LD A,C
+ROM  $F781   FE 1F         CP $1F
+ROM  $F783   28 11         JR Z,$F796  [+17]
+ROM  $F785   0C            INC C
+ROM  $F786   CB 8E         RES 1 (HL)
+ROM  $F788   C3 CC F7      JP $F7CC
+ROM  $F78B   E5            PUSH HL
+ROM  $F78C   21 B7 FB      LD HL,$FBB7
+ROM  $F78F   CB 46         BIT 0 (HL)
+ROM  $F791   28 01         JR Z,$F794  [+1]
+ROM  $F794   E1            POP HL
+ROM  $F795   C9            RET
+ROM  $F7CC   21 B6 FB      LD HL,$FBB6
+ROM  $F7CF   CB 46         BIT 0 (HL)
+ROM  $F7D1   20 0C         JR NZ,$F7DF  [+12]
+ROM  $F7D3   C5            PUSH BC
+ROM  $F7D4   ED 4B B3 FB   LD BC,($FBB3)
+ROM  $F7D8   CD 35 F9      CALL $F935
+ROM  $F7DB   CD E6 F7      CALL $F7E6
+ROM  $F7DE   C1            POP BC
+ROM  $F7DF   ED 43 B3 FB   LD ($FBB3),BC
+ROM  $F7E3   CD 35 F9      CALL $F935
+ROM  $F7E6   E5            PUSH HL
+ROM  $F7E7   21 B6 FB      LD HL,$FBB6
+ROM  $F7EA   CB 86         RES 0 (HL)
+ROM  $F7EC   E1            POP HL
+ROM  $F7ED   11 07 00      LD DE,$0007
+ROM  $F7F0   19            ADD HL,DE
+ROM  $F7F1   CD 33 F4      CALL $F433
+ROM  $F7F4   06 3C         LD B,$3C
+ROM  $F7F6   A8            XOR B
+ROM  $F7F7   00            NOP
+ROM  $F7F8   00            NOP
+ROM  $F7F9   C3 47 F4      JP $F447
+ROM  $F81D   ED 4B B3 FB   LD BC,($FBB3)
+ROM  $F821   0E 00         LD C,$00
+ROM  $F823   18 A7         JR $F7CC  [-89]
+ROM  $F868   ED 4B B3 FB   LD BC,($FBB3)
+ROM  $F86C   78            LD A,B
+ROM  $F86D   FE 17         CP $17
+ROM  $F86F   28 04         JR Z,$F875  [+4]
+ROM  $F871   04            INC B
+ROM  $F872   C3 CC F7      JP $F7CC
+ROM  $F935   11 00 00      LD DE,$0000
+ROM  $F938   69            LD L,C
+ROM  $F939   26 00         LD H,$00
+ROM  $F93B   29            ADD HL,HL
+ROM  $F93C   29            ADD HL,HL
+ROM  $F93D   29            ADD HL,HL
+ROM  $F93E   19            ADD HL,DE
+ROM  $F93F   0E 00         LD C,$00
+ROM  $F941   09            ADD HL,BC
+ROM  $F942   C9            RET

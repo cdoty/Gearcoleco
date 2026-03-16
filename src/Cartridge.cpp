@@ -89,7 +89,7 @@ Cartridge::CartridgeTypes Cartridge::GetType() const
 
 void Cartridge::ForceConfig(Cartridge::ForceConfiguration config)
 {
-	if (m_Type != CartridgePencil2)
+	if (m_Type != CartridgePencil2 && m_Type != CartridgePecos)
 	{
 		m_iCRC = CalculateCRC32(0, m_pROM, m_iROMSize);
 		GatherMetadata(m_iCRC);
@@ -293,7 +293,7 @@ bool Cartridge::LoadFromBuffer(const u8* buffer, int size)
         }
 
         m_iROMSize = size;
-        m_pROM = new u8[m_iROMSize];
+        m_pROM = new u8[0x8000];
         memcpy(m_pROM, buffer, m_iROMSize);
 
         m_bReady = true;
@@ -332,7 +332,8 @@ bool Cartridge::GatherMetadata(u32 crc)
 		case 0xAA55:
 			m_bValidROM = true;
 
-			m_Type = Cartridge::CartridgeColecoVision;
+//			m_Type = Cartridge::CartridgeColecoVision;
+			m_Type = Cartridge::CartridgePecos;
 
 			break;
 
@@ -341,6 +342,14 @@ bool Cartridge::GatherMetadata(u32 crc)
 			m_bPAL		= true;
 
 			m_Type = Cartridge::CartridgePencil2;
+
+			break;
+
+		case 0x0000:
+			m_bValidROM = true;
+			m_bPAL		= false;
+
+			m_Type = Cartridge::CartridgePecos;
 
 			break;
 
@@ -371,6 +380,9 @@ bool Cartridge::GatherMetadata(u32 crc)
             break;
 		case Cartridge::CartridgePencil2:
 			Log("Pencil 2 mapper found");
+			break;
+		case Cartridge::CartridgePecos:
+			Log("Pecos mapper found");
 			break;
 		case Cartridge::CartridgeNotSupported:
             Log("Cartridge not supported!!");

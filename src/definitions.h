@@ -29,7 +29,7 @@
 #include <fstream>
 #include <sstream>
 
-#ifdef DEBUG
+#ifdef _DEBUG
 #define DEBUG_GEARCOLECO 1
 #endif
 

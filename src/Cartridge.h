@@ -30,6 +30,7 @@ public:
     {
         CartridgeColecoVision,
 		CartridgePencil2,
+		CartridgePecos,
 		CartridgeNotSupported
     };
 
